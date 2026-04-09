@@ -1,422 +1,413 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>@extends('layouts.app')
-
-@section('title', 'Dashboard Petugas')
-
-@section('sidebar')
-    @include('petugas.components.sidebar')
-@endsection
-
-@section('navbar')
-    @include('layouts.navigation')
-@endsection
-
-@section('content')
-<div class="container-fluid px-4 py-4">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UKK Peminjaman Alat - Sistem Manajemen Inventaris</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
     <style>
-        :root {
-            --ocean-primary: #0ea5e9;
-            --ocean-dark: #0284c7;
-            --ocean-light: #e0f2fe;
-            --reef-teal: #14b8a6;
-            --coral: #f97316;
-            --sand: #fef3c7;
-            --wave-gradient: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-        }
-
-        .hero-welcome {
-            background: var(--wave-gradient);
-            border-radius: 30px;
-            padding: 2.5rem 3rem;
+        body {
+            font-family: 'Public Sans', sans-serif;
+            min-height: 100vh;
             position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 30px -10px rgba(2, 132, 199, 0.3);
+            overflow-x: hidden;
         }
-
-        .hero-welcome::before {
-            content: "⚓";
-            position: absolute;
-            bottom: -20px;
-            right: 30px;
-            font-size: 120px;
-            opacity: 0.1;
-            transform: rotate(15deg);
-            color: white;
+        
+        /* Background danau dengan overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -2;
         }
-
-        .hero-welcome::after {
-            content: "〰️";
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 80px;
-            opacity: 0.1;
-            transform: rotate(-10deg);
-            color: white;
+        
+        /* Overlay gelap untuk meningkatkan keterbacaan teks */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(16, 57, 73, 0.85) 0%, rgba(12, 99, 106, 0.75) 100%);
+            z-index: -1;
         }
-
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .hero-subtitle {
-            font-size: 1.1rem;
-            color: rgba(255,255,255,0.9);
-            font-weight: 500;
-        }
-
-        .card-premium {
-            background: white;
-            border-radius: 20px;
-            border: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
-        .card-premium:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15);
-        }
-
-        .stat-card {
+        
+        .hero-section {
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 1.5rem;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
         }
-
-        .stat-icon-wrapper {
-            width: 60px;
-            height: 60px;
-            border-radius: 18px;
+        
+        .logo-box {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(0, 167, 111, 0.9) 0%, rgba(0, 214, 143, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1rem;
-            font-size: 28px;
+            box-shadow: 0 20px 60px rgba(0, 167, 111, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .bg-ocean-soft {
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-            color: #0369a1;
-        }
-
-        .bg-reef-soft {
-            background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%);
-            color: #0d9488;
-        }
-
-        .bg-coral-soft {
-            background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
-            color: #c2410c;
-        }
-
-        .stat-label {
-            color: #64748b;
-            font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        .stat-value {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1.2;
-        }
-
-        .card-header {
-            background: white;
-            border-bottom: 2px solid #f1f5f9;
-            padding: 1.25rem 1.5rem;
-        }
-
-        .card-header h5 {
-            font-weight: 700;
-            color: #0f172a;
-            font-size: 1.2rem;
-        }
-
-        .table-modern {
-            border-collapse: separate;
-            border-spacing: 0 8px;
-            padding: 0 8px;
-        }
-
-        .table-modern thead th {
-            background: #f8fafc;
-            color: #475569;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: none;
-            padding: 1rem;
-        }
-
-        .table-modern tbody tr {
-            background: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            border-radius: 15px;
-            transition: all 0.2s ease;
-        }
-
-        .table-modern tbody tr:hover {
-            background: #f8fafc;
-            transform: scale(1.01);
-            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.1);
-        }
-
-        .table-modern td {
-            padding: 1rem;
-            border: none;
-            vertical-align: middle;
-            color: #334155;
-        }
-
-        .badge-soft-warning {
-            background: #fef3c7;
-            color: #92400e;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            font-size: 0.85rem;
-        }
-
-        .badge-soft-success {
-            background: #d1fae5;
-            color: #065f46;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            font-size: 0.85rem;
-        }
-
-        .badge-soft-info {
-            background: #e0f2fe;
-            color: #0369a1;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            font-size: 0.85rem;
-        }
-
-        .btn-primary {
-            background: var(--wave-gradient);
-            border: none;
-            border-radius: 12px;
-            padding: 0.5rem 1.2rem;
-            font-weight: 500;
-            font-size: 0.9rem;
+        
+        .logo-box i {
+            font-size: 2.5rem;
             color: white;
-            box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
-            transition: all 0.3s ease;
         }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
-
-        .btn-outline-secondary {
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 0.5rem 1.2rem;
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.85);
             font-weight: 500;
-            color: #64748b;
+            margin-bottom: 2.5rem;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, rgba(0, 167, 111, 0.95) 0%, rgba(0, 214, 143, 0.95) 100%);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 24px rgba(0, 167, 111, 0.4);
+            transition: all 0.3s ease;
+            color: white;
+            backdrop-filter: blur(4px);
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0, 167, 111, 0.5);
+            background: linear-gradient(135deg, #00a76f 0%, #00d68f 100%);
+            color: white;
+        }
+        
+        .btn-outline-custom {
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            color: white;
+            padding: 1rem 2.5rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
         }
-
-        .btn-outline-secondary:hover {
-            background: #f8fafc;
-            border-color: #0ea5e9;
-            color: #0ea5e9;
+        
+        .btn-outline-custom:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.1);
+            border-color: white;
         }
-
-        .fw-bold {
-            color: #0f172a;
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
         }
-
-        .text-dark {
-            color: #1e293b !important;
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.2);
         }
-
-        .table-modern td:first-child {
-            border-radius: 15px 0 0 15px;
+        
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-
-        .table-modern td:last-child {
-            border-radius: 0 15px 15px 0;
+        
+        .feature-icon i {
+            font-size: 2rem;
+            color: #00d68f;
+        }
+        
+        .stats-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #00d68f;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stats-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+        }
+        
+        /* Animasi untuk gelombang air */
+        .wave-effect {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: url('https://i.ibb.co/rZc2W7T/wave.png');
+            background-size: 1000px 150px;
+            animation: wave 20s linear infinite;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .wave-effect:nth-child(2) {
+            animation: wave 15s linear infinite;
+            opacity: 0.2;
+            bottom: 10px;
+        }
+        
+        .wave-effect:nth-child(3) {
+            animation: wave 10s linear infinite;
+            opacity: 0.1;
+            bottom: 20px;
+        }
+        
+        @keyframes wave {
+            0% {
+                background-position-x: 0;
+            }
+            100% {
+                background-position-x: 1000px;
+            }
+        }
+        
+        /* Efek partikel untuk latar belakang */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .stats-number {
+                font-size: 2rem;
+            }
         }
     </style>
-
-    <div class="hero-welcome mb-5">
-        <div class="d-flex justify-content-between align-items-center position-relative" style="z-index: 1;">
-            <div>
-                <h1 class="hero-title">
-                    Selamat Bertugas, Petugas! 
-                </h1>
-                <p class="hero-subtitle mb-0">{{ now()->translatedFormat('l, d F Y') }} • Siap melayani pembeli?</p>
-            </div>
-            <div class="d-none d-md-block">
-                <span style="font-size: 60px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));">⚓</span>
-            </div>
-        </div>
-    </div>
-
+</head>
+<body>
+    <!-- Efek partikel latar belakang -->
+    <div class="particles" id="particles"></div>
     
-
-   
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
-            <div class="card-premium h-100">
-                <div class="card-body stat-card">
-                    <div>
-                        <div class="stat-icon-wrapper bg-amber-soft">
-                            <i class="bi bi-hourglass-split"></i>
+    <!-- Efek gelombang air -->
+    <div class="wave-effect"></div>
+    <div class="wave-effect"></div>
+    <div class="wave-effect"></div>
+    
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+    <div class="col-lg-6 mb-5 mb-lg-0">
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="logo-box">
+             <i class="bi bi-upc-scan"></i> <!-- Mirip bentuk reel/joran -->
+            </div>
+                        <h3 class="mb-0 fw-bold" style="color: white;">UKK Peminjaman</h3>
+                    </div>
+                    
+                    <h1 class="hero-title">
+                       Sistem Peminjaman <br>
+                        <span style="background: linear-gradient(135deg, #00d68f 0%, #a7f3d0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"> Alat Pancing</span>
+                    </h1>
+                    
+                    <p class="hero-subtitle">
+                        Kelola inventaris dan peminjaman alat dengan mudah, cepat, dan efisien. 
+                        Platform modern untuk optimasi workflow Anda dengan latar alam yang menenangkan.
+                    </p>
+                    
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="{{ route('login') }}" class="btn btn-primary-custom">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Masuk Sekarang
+                        </a>
+                        <a href="{{ route('register') }}" class="btn btn-outline-custom">
+                            <i class="bi bi-person-plus me-2"></i>Daftar Gratis
+                        </a>
+                    </div>
+                    
+                    <div class="row mt-5 g-3">
+                        <div class="col-4">
+                            <div class="stats-box">
+                                <div class="stats-number">150+</div>
+                                <div class="stats-label">Alat</div>
+                            </div>
                         </div>
-                        <div class="stat-label mb-1">Perlu Persetujuan</div>
-                        <div class="stat-value">{{ \App\Models\Peminjaman::where('status', 'pending')->count() }}</div>
+                        <div class="col-4">
+                            <div class="stats-box">
+                                <div class="stats-number">2,500+</div>
+                                <div class="stats-label">Pengguna</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stats-box">
+                                <div class="stats-number">5,200+</div>
+                                <div class="stats-label">Transaksi</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card-premium h-100">
-                <div class="card-body stat-card">
-                    <div>
-                        <div class="stat-icon-wrapper bg-emerald-soft">
-                            <i class="bi bi-check-circle"></i>
+                
+                <div class="col-lg-6">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="bi bi-lightning-charge-fill"></i>
+                                </div>
+                                <h4 class="fw-bold mb-2">Proses Cepat</h4>
+                                <p class="mb-0" style="color: rgba(255, 255, 255, 0.8);">
+                                    Pengajuan dan approval peminjaman dalam hitungan detik. Sistem otomatis untuk efisiensi maksimal.
+                                </p>
+                            </div>
                         </div>
-                        <div class="stat-label mb-1">Sedang Dipinjam</div>
-                        <div class="stat-value">{{ \App\Models\Peminjaman::where('status', 'approved')->count() }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card-premium h-100">
-                <div class="card-body stat-card">
-                    <div>
-                        <div class="stat-icon-wrapper bg-indigo-soft">
-                            <i class="bi bi-arrow-counterclockwise"></i>
+                        <div class="col-12">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="bi bi-shield-check"></i>
+                                </div>
+                                <h4 class="fw-bold mb-2">Aman & Terpercaya</h4>
+                                <p class="mb-0" style="color: rgba(255, 255, 255, 0.8);">
+                                    Sistem keamanan berlapis dengan log aktivitas lengkap. Data Anda dijamin aman.
+                                </p>
+                            </div>
                         </div>
-                        <div class="stat-label mb-1">Sudah Dikembalikan</div>
-                        <div class="stat-value">{{ \App\Models\Peminjaman::where('status', 'returned')->count() }}</div>
+                        <div class="col-12">
+                            <div class="feature-card">
+                                <div class="feature-icon">
+                                    <i class="bi bi-graph-up"></i>
+                                </div>
+                                <h4 class="fw-bold mb-2">Laporan Real-time</h4>
+                                <p class="mb-0" style="color: rgba(255, 255, 255, 0.8);">
+                                    Dashboard analytics dan laporan lengkap untuk monitoring inventaris Anda.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card-premium">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Permintaan Peminjaman Terbaru</h5>
-            <a href="{{ route('petugas.peminjaman.index') }}" class="btn btn-sm btn-outline-secondary">Kelola Semua</a>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-modern align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th class="ps-4">Peminjam</th>
-                        <th>Alat</th>
-                        <th>Tanggal Pinjam</th>
-                        <th>Status</th>
-                        <th class="text-end pe-4">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $pending = \App\Models\Peminjaman::with(['user', 'alat'])
-                            ->where('status', 'pending')
-                            ->orderBy('created_at', 'desc')
-                            ->limit(5)
-                            ->get();
-                    @endphp
-                    @forelse($pending as $p)
-                        <tr>
-                            <td class="ps-4">
-                                <div class="fw-bold text-dark">{{ $p->user->name }}</div>
-                            </td>
-                            <td>{{ $p->alat->nama_alat }}</td>
-                            <td>{{ $p->tanggal_pinjam->format('d M Y') }}</td>
-                            <td><span class="badge badge-soft-warning">Menunggu</span></td>
-                            <td class="text-end pe-4">
-                                <a href="{{ route('petugas.peminjaman.show', $p) }}" class="btn btn-sm btn-primary">
-                                    Proses
-                                </a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">Belum ada permintaan baru.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-@endsection
-
-
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Script untuk efek partikel bergerak
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Ukuran acak
+                const size = Math.random() * 20 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posisi acak
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Opasitas acak
+                particle.style.opacity = Math.random() * 0.3 + 0.1;
+                
+                // Animasi bergerak
+                const duration = Math.random() * 20 + 10;
+                particle.style.animation = `float ${duration}s infinite ease-in-out`;
+                
+                // Tambahkan ke container
+                particlesContainer.appendChild(particle);
+            }
+            
+            // Tambahkan CSS untuk animasi partikel
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes float {
+                    0%, 100% {
+                        transform: translate(0, 0) rotate(0deg);
+                    }
+                    25% {
+                        transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 180}deg);
+                    }
+                    50% {
+                        transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 180}deg);
+                    }
+                    75% {
+                        transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px) rotate(${Math.random() * 180}deg);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
